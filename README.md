@@ -4,13 +4,27 @@
 
 - [24 days from node.js to Rust](https://vino.dev/blog/node-to-rust-day-1-rustup/) | [中文](https://juejin.cn/post/7037769953440858120)
 
-## 创建项目
+
+
+## Cargo
+
+- 使用 `cargo new` 命令创建新的项目模板。
+- 使用 `cargo build` 编译项目。
+- 使用 `cargo run` 命令编译并运行项目。
+- 使用 `cargo test` 命令测试项目。
+- 使用 `cargo check` 命令检查项目类型。
+- 使用 `cargo doc` 命令编译项目的文档。
+- 使用 `cargo publish` 命令将库发布到 crates.io。
+- 使用`cargo install`全局安装包
+- 通过包名添加到 Cargo.toml 文件来将依赖添加到项目。
+
+### 创建项目
 
 ```bash
 $ cargo new my-app
 ```
 
-## 打包&运行
+### 打包&运行
 
 ```bash
 $ cargo run
@@ -21,7 +35,7 @@ $ cargo run
 默认情况下会生成文件大小、性能等debug信息，当想要得到`release`版代码时，可以运行`cargo build --release`，
 此时二进制文件的生成目录是`./target/release/my-app`
 
-## 安装依赖
+### 安装依赖
 
 在`Node.js`中我们使用`npm install [dep]`命令来安装依赖的模块，如果安装了 [cargo-edit](https://github.com/killercup/cargo-edit) 那么在`rust`中我们可以使用`cargo add [dep]`来增添依赖，安装方法：
 
@@ -31,19 +45,19 @@ $ cargo install cargo-edit
 
 安装完毕后，会增加4个子命令：`add`、`rm`、`upgrade`、`set-version`
 
-## 全局安装
+### 全局安装
 
 类比`Node.js`中的`npm install --global`，在`rust`中我们使用`cargo install`
 
-## 运行测试
+### 运行测试
 
 类比`Node.js`中的`npm test`，在`rust`中我们使用`cargo test`
 
-## 发布模块
+### 发布模块
 
 类比`Node.js`中的`npm publish`，在`rust`中我们使用`cargo publish`
 
-## 运行任务
+### 运行任务
 
 在`Node.js`中我们使用`npm run xxx`来运行任务，然而在`rust`中除了几个常见的命令外，其余的都是取决于用户自己。例如我们可以通过`cargo run`来运行一个代码，或者用`cargo bench`分析一段代码的性能，或者是用`cargo build`来做打包，或者是用`cargo clean`来清空打包目录（默认是`target`），或者是用`cargo doc`生成文档。`cargo`还支持 [Build Scripts](https://doc.rust-lang.org/cargo/reference/build-scripts.html#build-scripts) 机制确保可以打包之前运行指定的程序。
 
@@ -55,7 +69,7 @@ $ cargo install just
 
 `cargo-make`和`cargo-cmd`也是很好的替代方案
 
-## workspace与monorepo
+### workspace与monorepo
 
 包管理器在处理大项目中的小模块时一般都会用到`workspace`概念，在`Rust`中你可以在根目录下创建一个`Cargo.toml`文件作为`workspace`的入口，描述清楚`workspace`中所包含的内容，大体上类似如下：
 
