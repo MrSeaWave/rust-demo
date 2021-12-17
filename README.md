@@ -1,4 +1,22 @@
-复刻rust的demo 例子，用于学习
+用于学习[Rust](https://www.rust-lang.org/)的仓库
+
+## 创建项目
+
+```bash
+$ cargo new my-app
+```
+
+## 打包&运行
+
+```bash
+$ cargo run
+```
+
+`cargo run`会调用`cargo build`来打包应用，然后运行默认（也可以指定）的二进制文件，运行完这个命令后，会生成好二进制文件，
+具体的位置是`./target/debug/my-app`。如果只是想打包而不不运行，可以执行`cargo build`命令。
+默认情况下会生成文件大小、性能等debug信息，当想要得到`release`版代码时，可以运行`cargo build --release`，
+此时二进制文件的生成目录是`./target/release/my-app`
+
 
 ## Move & Copy & Borrow
 
