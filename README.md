@@ -1,8 +1,35 @@
 用于学习[Rust](https://www.rust-lang.org/)的仓库，
 
+> 不得使用 Cargo 更新 Rust 编译器版本。 使用 `rustup update` 命令更新 Rust 编译器版本。
+
+
+
 ## 文章
 
+- [The Rust Book](https://doc.rust-lang.org/stable/book/) | [中文](https://kaisery.github.io/trpl-zh-cn/) 
+- [通过例子学 Rust](https://rustwiki.org/zh-CN/rust-by-example/#通过例子学-rust)
+- [死灵书](https://doc.rust-lang.org/nomicon/index.html) | [中文](https://nomicon.purewhite.io/)
 - [24 days from node.js to Rust](https://vino.dev/blog/node-to-rust-day-1-rustup/) | [中文](https://juejin.cn/post/7037769953440858120)
+
+- [使用 Rust 迈出第一步](https://docs.microsoft.com/zh-cn/learn/paths/rust-first-steps/)
+
+## 检查 Rust 安装
+
+在终端或命令提示符下运行以下命令：
+
+```bash
+$ rustc --version
+
+# rustc 1.56.1 (59eed8a2a 2021-11-01)
+```
+
+然后，运行以下命令：
+
+```bash
+$ cargo --version
+
+# cargo 1.56.0 (4ed5d137b 2021-10-04)
+```
 
 
 
