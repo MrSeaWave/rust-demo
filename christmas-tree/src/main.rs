@@ -35,19 +35,21 @@ fn main() {
 }
 
 // 常量定义
-// const APPLE: &str = "🍎";
-// const STAR: &str = "🌟";
-// const BELL: &str = "🔔";
-// const TREE: &str = "🎄";
-// const DOOR: &str = "🚪";
-// const GIFT: &str = "🎁";
+const APPLE: &str = "🍎";
+const STAR: &str = "🌟";
+const BELL: &str = "🔔";
+const TREE: &str = "🎄";
+const DOOR: &str = "🚪";
+const GIFT: &str = "🎁";
+const SPACE: &str = "  ";
 
-const APPLE: &str = "a";
-const STAR: &str = "s";
-const BELL: &str = "x";
-const TREE: &str = "l";
-const DOOR: &str = "m";
-const GIFT: &str = "G";
+// const APPLE: &str = "a";
+// const STAR: &str = "s";
+// const BELL: &str = "x";
+// const TREE: &str = "l";
+// const DOOR: &str = "m";
+// const GIFT: &str = "G";
+// const SPACE: &str = " ";
 
 struct ChristmasTree {
   floor: u32,
@@ -76,7 +78,7 @@ impl ChristmasTree {
         for i in (0..(bottom_amount - line_amount) / 2 - 1).rev() {
           // 输出空格
           // println!("i :{}", i);
-          str_list.push(" ".to_owned());
+          str_list.push(SPACE.to_owned());
         }
 
         for i in 0..line_amount {
@@ -95,7 +97,7 @@ impl ChristmasTree {
 
       let mut str_list = Vec::new();
       for i in (0..(bottom_amount - line_amount) / 2 - 1).rev() {
-        str_list.push(" ".to_owned());
+        str_list.push(SPACE.to_owned());
       }
       for i in 0..line_amount {
         str_list.push(DOOR.to_owned())
