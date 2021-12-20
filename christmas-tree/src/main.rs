@@ -15,6 +15,7 @@ fn main() {
         .short("f")
         .takes_value(true)
         .required(true)
+        .default_value("4")
         .help("floor of the tree"),
     )
     .arg(
@@ -99,7 +100,7 @@ impl ChristmasTree {
       for i in 0..line_amount {
         str_list.push(DOOR.to_owned())
       }
-      //在圣诞树下放点礼物
+      // TODO 在圣诞树下放点礼物
 
       // if f>0 {
       //   str_list.push
