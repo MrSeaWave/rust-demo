@@ -102,11 +102,8 @@ impl ChristmasTree {
       for i in 0..line_amount {
         str_list.push(DOOR.to_owned())
       }
-      // TODO 在圣诞树下放点礼物
-
-      // if f>0 {
-      //   str_list.push
-      // }
+      // 在圣诞树下放点礼物
+      str_list.push(ChristmasTree::gen_gift(f));
       println!("{}", str_list.join(""))
     }
   }
@@ -116,6 +113,7 @@ impl ChristmasTree {
     return 1 + line * 2 + f * 4 + (f / 2 * 2) * ((f + 1) / 2);
   }
 
+  // 随机生成树 or 挂件
   fn rand_apple_tree() -> String {
     let mut rng = thread_rng();
     let n: u32 = rng.gen_range(0..100);
@@ -128,5 +126,26 @@ impl ChristmasTree {
     } else {
       return TREE.to_owned();
     }
+  }
+
+  // 生成礼物
+  fn gen_gift(f: u32) -> String {
+    if f == 0 {
+      return SPACE.to_owned();
+    }
+    // 第一层祝福语
+    if f == 1 {
+      return [SPACE.to_owned(), "Merry Christmas!".to_owned()].join("");
+    }
+    let mut str_list = Vec::new();
+
+    str_list.push(SPACE.to_owned());
+
+    // 第二层开始放礼物
+    for _f in 1..f {
+      str_list.push(GIFT.to_owned())
+    }
+
+    return str_list.join("");
   }
 }
