@@ -18,23 +18,46 @@ fn main() {
         .default_value("4")
         .help("floor of the tree"),
     )
+    //   TODO 以下参数被接受使用
     .arg(
-      Arg::with_name("withStar")
-        .short("w")
-        .long("withStar")
-        .help("Adds a little start"),
+      Arg::with_name("christmasPendant")
+        .short("c")
+        .long("christmasPendant")
+        .takes_value(true)
+        .default_value("true")
+        .help("Christmas pendant"),
     )
+    .arg(
+      Arg::with_name("useEmoji")
+        .short("u")
+        .long("useEmoji")
+        .takes_value(true)
+        .default_value("true")
+        .help("Use Emoji 🌟"),
+    )
+    // .arg(
+    //   Arg::with_name("withStar")
+    //     .short("w")
+    //     .long("withStar")
+    //     .help("Adds a little start"),
+    // )
     .get_matches();
 
+  // println!("useEmoji: {}", matches.is_present("useEmoji"));
+  // println!(
+  //   "useEmoji: matches.value_of() {}",
+  //   value_t_or_exit!(matches.value_of("useEmoji"), bool)
+  // );
   let tree = ChristmasTree {
     floor: value_t_or_exit!(matches.value_of("floor"), u32),
-    has_star: matches.is_present("withStar"),
+    // has_star: matches.is_present("withStar"),
+    use_emoji: value_t_or_exit!(matches.value_of("useEmoji"), bool),
   };
 
   tree.draw()
 }
 
-// 常量定义
+// TODO 常量定义，以下常量可以被 useEmoji 控制
 const APPLE: &str = "🍎";
 const STAR: &str = "🌟";
 const BELL: &str = "🔔";
@@ -53,7 +76,7 @@ const SPACE: &str = "  ";
 
 struct ChristmasTree {
   floor: u32,
-  has_star: bool,
+  use_emoji: bool,
 }
 
 impl ChristmasTree {
