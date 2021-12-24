@@ -5,7 +5,7 @@
 $ cargo run -- -f 4
 ```
 
-![img](https://cdn.jsdelivr.net/gh/MrSeaWave/figure-bed-profile@main/uPic/2021/y4yIBS_qeplNf.png)
+![img](https://cdn.jsdelivr.net/gh/MrSeaWave/figure-bed-profile@main/uPic/2021/4EwkNr_2021-12-24%2011.29.42.gif)
 
 ## 打包
 
