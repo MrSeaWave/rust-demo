@@ -475,6 +475,10 @@ impl Display for TrafficLightColor {
 
 ## Move & Copy & Borrow
 
+**在 Rust 中，所有权转移（即移动）是默认行为。**
+
+参考 https://docs.microsoft.com/zh-cn/learn/modules/rust-memory-management/2-learn-about-borrowing
+
 1. 一个值在同一时刻只有一个所有者。当所有者离开作用域，其拥有的值会被丢弃。赋值或者传参会导致值 Move，所有权被转移，一旦所有权转移，之前的变量就不能访问。
 2. 如果值实现了 Copy trait，那么赋值或传参会使用 Copy 语义，相应的值会被按位拷贝，产生新的值。
 3. 一个值可以有多个只读引用。
@@ -482,3 +486,240 @@ impl Display for TrafficLightColor {
 5. 引用的生命周期不能超出值的生命周期。
 
 ![borrow copy move](https://user-images.githubusercontent.com/21967852/144003189-fd7b02b3-2214-4475-a5b7-2a329ed04c1b.jpeg)
+
+不可变引用与可变引用还有一个不同之处：会对我们生成 Rust 程序的方式有根本影响。 当借用任何 `T` 类型的值时，以下规则适用：
+
+代码必须同时实现以下任一定义，但不能同时实现这两个定义：
+
+- 一个或多个不可变引用 (`&T`)
+- 恰好一个可变引用 (`&mut T`)
+
+```rust
+fn main() {
+    let mut value = String::from("hello");
+
+    let ref1 = &mut value;
+    let ref2 = &mut value;
+
+    println!("{}, {}", ref1, ref2);
+}
+
+error[E0499]: cannot borrow `value` as mutable more than once at a time
+     --> src/main.rs:5:16
+      |
+    4 |     let ref1 = &mut value;
+      |                ---------- first mutable borrow occurs here
+    5 |     let ref2 = &mut value;
+      |                ^^^^^^^^^^ second mutable borrow occurs here
+    6 |
+    7 |     println!("{}, {}", ref1, ref2);
+      |                        ---- first borrow later used here
+```
+
+```rust
+fn main() {
+    let mut value = String::from("hello");
+
+    let ref1 = &value;
+    let ref2 = &mut value;
+
+    println!("{}, {}", ref1, ref2);
+}
+
+error[E0502]: cannot borrow `value` as mutable because it is also borrowed as immutable
+     --> src/main.rs:5:16
+      |
+    4 |     let ref1 = &value;
+      |                ------ immutable borrow occurs here
+    5 |     let ref2 = &mut value;
+      |                ^^^^^^^^^^ mutable borrow occurs here
+    6 |
+    7 |     println!("{}, {}", ref1, ref2);
+      |                        ---- immutable borrow later used here
+```
+
+## 使用特征定义共享行为
+
+关键字 `impl Trait for Type`，其中 `Trait` 是要实现的特征的名称，`Type` 是实现器结构或枚举的名称。
+
+```rust
+use std::f64::consts::PI;
+
+trait Area {
+    fn area(&self) -> f64;
+}
+
+struct Circle {
+    radius: f64,
+}
+
+impl Area for Circle {
+    fn area(&self) -> f64 {
+        PI * self.radius.powf(2.0)
+    }
+}
+
+fn main() {
+    let circle = Circle { radius: 5.0 };
+
+    println!("Circle area: {}", circle.area())
+}
+
+```
+
+## 单元测试
+
+Rust 中的单元测试是用 `#[test]` 属性标记的简单函数，可用于验证非测试代码是否按预期方式正常运行。 系统仅会在测试代码时编译这些函数。
+
+测试函数会运行要测试的代码。 然后，这些函数通常使用 `assert!` 或 `assert_eq!` 宏来检查结果。
+
+```rust
+fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+#[test]
+fn add_works() {
+    assert_eq!(add(1, 2), 3);
+    assert_eq!(add(10, 12), 22);
+    assert_eq!(add(5, -2), 3);
+}
+```
+
+当我们执行 `$ cargo test` 命令时，输出将如以下示例所示：
+
+```
+running 1 test
+test add_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+### 测试失败
+
+尝试添加失败的测试
+
+```rust
+#[test]
+fn add_fails() {
+    assert_eq!(add(2, 2), 7);
+}
+```
+
+输出：
+
+```
+
+running 2 tests
+test add_works ... ok
+test add_fails ... FAILED
+
+failures:
+
+---- add_fails stdout ----
+thread 'add_fails' panicked at 'assertion failed: `(left == right)`
+  left: `4`,
+ right: `7`', src/main.rs:12:5
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    add_fails
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+### 预期的失败
+
+在许多情况下，要测试某种条件是否会导致 `panic!`。
+
+使用 `should_panic`，便可以检查 `panic!`。 如果将此属性添加到测试函数，则当函数中的代码崩溃时，测试便会通过。 当代码不崩溃时，测试便会失败。
+
+```rust
+#[test]
+#[should_panic]
+fn add_fails() {
+    assert_eq!(add(2, 2), 7);
+}
+```
+
+输出：
+
+```
+running 2 tests
+test add_works ... ok
+test add_fails - should panic ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+### 忽略测试
+
+使用 `[ignore]` 属性对带有 `[test]` 属性批注的函数进行批注。 此属性会令系统在测试过程中跳过该测试函数。
+
+```rust
+#[test]
+#[ignore = "not yet reviewed by the Q.A. team"]
+fn add_negatives() {
+    assert_eq!(add(-2, -2), -4)
+}
+```
+
+输出：
+
+```
+running 3 tests
+test add_negatives ... ignored
+test add_works ... ok
+test add_fails - should panic ... ok
+
+test result: ok. 2 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+### 测试模块
+
+使用 `#[cfg(test)]` 属性
+
+```rust
+fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+#[cfg(test)]
+mod add_function_tests {
+    use super::*;
+
+    #[test]
+    fn add_works() {
+        assert_eq!(add(1, 2), 3);
+        assert_eq!(add(10, 12), 22);
+        assert_eq!(add(5, -2), 3);
+    }
+
+    #[test]
+    #[should_panic]
+    fn add_fails() {
+        assert_eq!(add(2, 2), 7);
+    }
+
+    #[test]
+    #[ignore]
+    fn add_negatives() {
+        assert_eq!(add(-2, -2), -4)
+    }
+}
+```
+
+`cfg` 属性负责控制条件编译，并仅会在为 `true` 时编译其所附带的内容。 每当执行 `$ cargo test` 命令时，Cargo 都会自动发出 `test` 编译标志，因此，当我们运行测试时，该标志将始终为 true。
+
+`use super::*;` 声明是 `add_function_tests` 模块内部代码访问外部模块中 `add` 的必要条件。
+
+## 集成测试
+
+集成测试的独特之处在于它们存在于单独的目录和文件中，因此它们可以在外部对库代码进行测试。 使用 Cargo 运行集成测试时，请将测试放在`tests`目录中。 Cargo 会运行此目录中的每个源文件。 在项目目录中创建测试，级别与你的 src 目录相同。
+
+在“集成测试”时，以看到 Rust 将测试结果各自放在不同的部分。 首先是单元测试结果，然后是集成结果，最后是文档结果。
+
+仅可通过集成测试来测试库 （库靠 `cargo new --lib <dir_name>` 生成，含有`src/lib.rs`文件）。
+
+![image-20211227162915648](https://cdn.jsdelivr.net/gh/MrSeaWave/figure-bed-profile@main/uPic/2021/gyWB1D_image-20211227162915648.png)
